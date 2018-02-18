@@ -1,15 +1,17 @@
 FROM ubuntu:artful
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    g++ gcc libc6-dev make pkg-config curl ca-certificates \
-    libssl-dev \
-    && rm -rf /var/lib/apt/lists/*
-
 # see https://github.com/docker-library/golang/blob/master/1.10/stretch/Dockerfile
 
 ENV GOLANG_VERSION 1.10
 
-RUN set -eux; \
+ENV GOPATH /go
+ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    g++ gcc libc6-dev make pkg-config curl ca-certificates \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/* && \
+    set -eux; \
 	\
 # this "case" statement is generated via "update.sh"
 	dpkgArch="$(dpkg --print-architecture)"; \
@@ -31,10 +33,6 @@ RUN set -eux; \
 	rm go.tgz; \
 	\
 	export PATH="/usr/local/go/bin:$PATH"; \
-	go version
-
-ENV GOPATH /go
-ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
-
-RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
+	go version ; \
+    mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
