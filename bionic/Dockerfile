@@ -9,7 +9,7 @@ ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     g++ gcc libc6-dev make pkg-config curl ca-certificates \
-    libssl-dev \
+    libssl-dev libclamav-dev libmagic-dev libyara-dev liblzma-dev \
     && rm -rf /var/lib/apt/lists/* && \
     set -eux; \
 	\
